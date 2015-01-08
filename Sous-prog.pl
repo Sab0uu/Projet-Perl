@@ -53,14 +53,33 @@ sub open_file {
 # Génération des résultats si l'on agit sur une liste de codes PDB
 sub results_LoadOnList {
 	my $dir;
+	my @lines;
+	my %counter;
 	my $open = &open_file;
 
-	# On parcourt la liste de codes PDB
     open FILE, $open;
 	while (<FILE>){
-		my($resid1,$resname1,$resid2,$resname2,$distance) =;
+		chomp;
+		push @lines, $_;
 	}
+	# my($resid1,$resname1,$resid2,$resname2,$distance)=split;
+	# @lines = (<FILE>);
 	close FILE;
+
+	foreach my $l (@lines) {
+		if(exists($counter{$l})) {
+			$counter{$l}++;
+		} else {
+			$counter{$l} = 1 ;
+	 
+		}
+	}
+
+	foreach my $k (sort keys %counter){
+		print "$k -> $counter{$k}\n";
+	}
+
+
 
 	# $sw = $mw -> Toplevel();
 	# $sw->title("Results of distances calculations");
