@@ -44,7 +44,6 @@ close FILE;
 
 		$left = int($distance);
 		$right = int($distance) + 0.5;
-<<<<<<< HEAD
 
 		if (exists $counter{$left.'_'.$right.'_'.$resname1.'_'.$resname2}){
 			$counter{$left.'_'.$right.'_'.$resname1.'_'.$resname2} += 1;
@@ -53,16 +52,6 @@ close FILE;
 		}
 	}
 
-=======
-
-		if (exists $counter{$left.'_'.$right.'_'.$resname1.'_'.$resname2}){
-			$counter{$left.'_'.$right.'_'.$resname1.'_'.$resname2} += 1;
-		} else {
-			$counter{$left.'_'.$right.'_'.$resname1.'_'.$resname2} = 0;
-		}
-	}
-
->>>>>>> aa3b97b55a40c711bc7276016e5111023e1fdb55
 # foreach my $k (sort keys %dist){
 # 	print "$k -> $dist{$k}\n";
 # }
@@ -72,10 +61,4 @@ foreach my $k (sort keys %counter){
 	my $count = $counter{$k};
 
 	printf "%4.1f %4.1f %3s %3s %3d\n",$min,$max,$aa1,$aa2,$count;
-<<<<<<< HEAD
 }
-Status API Training Shop Blog About
-© 2015 GitHub, Inc. Terms Privacy Security Contact
-=======
-}
->>>>>>> aa3b97b55a40c711bc7276016e5111023e1fdb55
