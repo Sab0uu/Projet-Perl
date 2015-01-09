@@ -4,6 +4,8 @@ use Carp;
 sub ddl_PDB {
 	my ($pdbfile)=@_;
 	
+	system("if [ ! -d Results ]; then mkdir Results;fi")
+
 	my $pdb = $pdbfile;
 	$pdb =~ s/\.pdb//;
 	$pdb = lc($pdb);

@@ -106,6 +106,8 @@ sub save_File {
 sub ddl_PDB {
 	my($type)=@_;
 
+	system("if [ ! -d Results ]; then mkdir Results;fi")
+
 	# On vérifie que la variable $pdb n'est pas vide
 	if ($pdb ne ""){
 
