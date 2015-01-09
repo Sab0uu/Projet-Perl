@@ -2,18 +2,19 @@ use Carp;
 
 # Extrait les CA et leurs coordonnées
 sub extract_CA {
-		my ($pdbfile)=@_;
+	my ($pdbfile)=@_;
 
-		my %coord;
+	my %coord;
 
-		my $output = $pdbfile;
-		$output =~ s/\..*$//;
-		$output = lc($output);
+	my $output = $pdbfile;
+	$output =~ s/^.*\///g;
+	$output =~ s/\..*$//;
+	$output = lc($output);
 
-		open OUTPUT, "> Results/Extract_CA-${output}.txt";
+	open OUTPUT, "> Extract_CA-${output}.txt";
 
-		open PDB, $pdbfile;
-		while (<PDB>) {
+	open PDB, $pdbfile;
+	while (<PDB>) {
 		if (/^ATOM/) {
 			#On récupère les noms des différents atomes
 			my $atm = substr($_,12,4);

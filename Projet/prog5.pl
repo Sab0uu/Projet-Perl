@@ -17,8 +17,6 @@ $mw->maxsize(200,180);
 
 $mw->title("Calculate distance between 2 amino acids");
 
-# print
-
 ##############################################################################
 ## MENU
 
@@ -36,27 +34,8 @@ $window->command(-label => '~Quit',
                 -accelerator => 'Ctrl+Q',
                 -command => \&clean_mw); 
 
-# "Onglet" Program dans lequel on a la possibilité de lancer le programme
-# sur une liste de codes PDB
-$program->command(-label => '~Load on a list',
-                -accelerator => 'Ctrl+L',
-                -command => \&results_LoadOnList); 
-
-# "Onglet" Program dans lequel on a la possibilité de consulter la version
-# du programme ainsi que des informations concernant ce dernier
-$help->command(-label => '~Version',
-                -accelerator => 'Ctrl+V',
-                -command => \&results_LoadOnList); 
-
-$help->command(-label => '~About',
-                -accelerator => 'Ctrl+H',
-                -command => \&results_LoadOnList); 
-
 # Raccourcis clavier
 $mw->bind('<Control-q>', [\&clean_mw]);
-$mw->bind('<Control-l>', [\&results_LoadOnList]);
-$mw->bind('<Control-v>', [\&results_LoadOnList]);
-$mw->bind('<Control-h>', [\&results_LoadOnList]);
 
 ##############################################################################
 ## WIDGETS et BOUTONS
@@ -82,14 +61,6 @@ $mw->Button(-text => "Load",
 			-command => \&results_Load,
 			-background => '#FAFAFA',
 			)->pack(-side => 'left', -expand => 1, -fill => 'x');
-
-# Il pourra égalemer choisir de lancer les calculs sur une liste de codes PDB qui seront téléchargés et traités
-# $mw->Button(-text => 'Load on a list' ,
-#             -command => \&results_LoadOnList,
-#             -background => '#FAFAFA',
-       	   
-#        	    )->pack (-side => 'top', -expand => 1, -fill => 'x');
-
 
 MainLoop;
 
@@ -168,14 +139,6 @@ sub ddl_PDB {
 
 		} else {
 			print "You have to choose a directory\n";
-			# if($type eq "PDBcode"){
-			# 	$dir = $mw->chooseDirectory(-initialdir => '.',
-		 #                            	    -title => 'Choose a folder');
-			# } elsif ($type eq "PDBlist"){
-			# 	$dir = "Results";
-			# } else {
-			# 	print "Error! No such type of document\n";
-			# }
 		}
 
 	} else {
@@ -264,64 +227,4 @@ sub results_Load {
     			-command =>sub {$sw -> destroy},
     			-background => '#FAFAFA',
     			)->pack(-side => 'left', -expand => 1, -fill => 'x');
-}
-
-# Génération des résultats si l'on agit sur une liste de codes PDB
-sub results_LoadOnList {
-	my $dir;
-	my $open = &open_file;
-
-	# On parcourt la liste de codes PDB
-    open FILE, $open;
-	while (<FILE>){
-		s/\t+//g;
-		s/\r//g;
-		s/\s//g;
-
-		# On vérifie que le code PDB est composé de 4 caractères si ce n'est 
-		# pas le cas, on ne le traite pas
-		if(/^[0-9A-Za-z]{4}$/){
-			$pdb = $_;
-			$dir = &ddl_PDB("PDBlist");
-			my @Results = &calculate_Distance_Filters($dir);
-
-			# Création d'un fichier tmp.txt dans le dossir Results servant à la concaténation des 
-			# résultats de calcul pour chaque PDB
-			open OUTPUT, ">> Results/tmp.txt";
-			print OUTPUT sort @Results;
-			close OUTPUT;
-		}
-	}
-	close FILE;
-
-	$sw = $mw -> Toplevel();
-	$sw->title("Results of distances calculations");
-
-	open TMPFILE, "Results/tmp.txt";
-	push @tmp, <TMPFILE>;
-	close TMPFILE;
-
-	# Création d'une "liste" permettant de visualiser les résultats
-	my $Results=$sw->Scrolled("Listbox", 
-							  -scrollbars=>"e",
-							  -heigh=> 30,
-							  -background => 'white',
-							  -width=> 50)->pack();
-
-	$Results->insert('end', sort @tmp);
-
-	#Bouton "save" afin de sauvegarder les résultats dans un fichier
-    $sw->Button(-text=>"Save", 
-    			-command =>[\&save_File,@tmp],
-    			-background => '#FAFAFA',
-    			)->pack(-side => 'left', -expand => 1, -fill => 'x');
-
-    #Bouton pour fermer la fenetre des résultats
-    $sw->Button(-text=>"Exit", 
-    			-command =>sub {$sw -> destroy},
-    			-background => '#FAFAFA',
-    			)->pack(-side => 'left', -expand => 1, -fill => 'x');
-
-    # On supprime le fichier tmp.txt qui a servi à la concaténation des résultats de chaque PDB
-    system("rm -f tmp.txt");
 }

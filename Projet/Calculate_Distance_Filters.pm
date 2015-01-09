@@ -5,6 +5,7 @@ sub calculate_Distance_Filters {
 	my ($pdbfile,%coord)=@_;
 
 	my $output = $pdbfile;
+	$output =~ s/^.*\///g;
 	$output =~ s/\..*$//;
 	$output = lc($output);
 

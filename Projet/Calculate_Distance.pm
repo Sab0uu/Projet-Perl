@@ -5,6 +5,7 @@ sub calculate_Distance {
 	my ($pdbfile,%coord)=@_;
 
 	my $output = $pdbfile;
+	$output =~ s/^.*\///g;
 	$output =~ s/\..*$//;
 	$output = lc($output);
 
