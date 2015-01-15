@@ -9,7 +9,7 @@ sub calculate_Distance {
 	$output =~ s/\..*$//;
 	$output = lc($output);
 
-	open OUTPUT, "> Results/Calculate_Distance-${output}.txt";
+	open OUTPUT, "> Results/Calculate_Distance-${output}.tmp";
 
 	for my $i (sort {$coord{$a} <=> $coord{$b}} keys %coord){
 		my($coordx1,$coordy1,$coordz1) = @{$coord{$i}};
@@ -31,6 +31,9 @@ sub calculate_Distance {
 		}
 	}
 	close OUTPUT;
+	system("cat Results/Calculate_Distance-${output}.tmp | sort -k1n,1n -k3n,3n > Results/Calculate_Distance-${output}.txt");
+	system("rm -f Results/Calculate_Distance-${output}.tmp");
+	return "Results/Calculate_Distance-${output}.txt"
 }	
 
 1;

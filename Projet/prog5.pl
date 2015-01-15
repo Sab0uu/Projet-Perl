@@ -106,7 +106,7 @@ sub save_File {
 sub ddl_PDB {
 	my($type)=@_;
 
-	system("if [ ! -d Results ]; then mkdir Results;fi")
+	system("if [ ! -d Results ]; then mkdir Results;fi");
 
 	# On vérifie que la variable $pdb n'est pas vide
 	if ($pdb ne ""){
@@ -177,7 +177,8 @@ sub calculate_Distance_Filters {
 				if ($resid2 > 4){
 
 					#On ne souhaite pas calculer les distances entre les deux mêmes résidus
-					if ($i ne $j){
+					if (($resid2 > $resid1) and ($resid2 - $resid1 > 4)){
+
 
 						my $distance = sqrt(($coordx1-$coordx2)**2+($coordy1-$coordy2)**2+($coordz1-$coordz2)**2);
 

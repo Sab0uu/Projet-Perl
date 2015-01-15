@@ -11,7 +11,7 @@ sub extract_CA {
 	$output =~ s/\..*$//;
 	$output = lc($output);
 
-	open OUTPUT, "> Extract_CA-${output}.txt";
+	open OUTPUT, "> Results/Extract_CA-${output}.txt";
 
 	open PDB, $pdbfile;
 	while (<PDB>) {

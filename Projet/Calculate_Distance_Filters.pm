@@ -9,7 +9,7 @@ sub calculate_Distance_Filters {
 	$output =~ s/\..*$//;
 	$output = lc($output);
 
-	open OUTPUT, "> Results/Calculate_Distance_Filters-${output}.txt";
+	open OUTPUT, "> Results/Calculate_Distance_Filters-${output}.tmp";
 
 	for my $i (sort {$coord{$a} <=> $coord{$b}} keys %coord){
 		my($coordx1,$coordy1,$coordz1) = @{$coord{$i}};
@@ -24,7 +24,7 @@ sub calculate_Distance_Filters {
 			my $resid2 = $infos2[1];
 
 			#Premier filtre : la séquence séparant 2 acides aminés doit être supérieure à 4
-			if ($resid2 > 4){
+			if (($resid2 > $resid1) and ($resid2 - $resid1 > 4)){
 
 				#On ne souhaite pas calculer les distances entre les deux mêmes résidus
 				if ($i ne $j){
@@ -32,7 +32,7 @@ sub calculate_Distance_Filters {
 					my $distance = sqrt(($coordx1-$coordx2)**2+($coordy1-$coordy2)**2+($coordz1-$coordz2)**2);
 
 					#Deuxième filtre : la distance au niveau spatial séparant 2 CA comprise entre 0 et 15 Å
-					if ($distance > 0 and $distance < 15){
+					if (($distance > 0 )and ($distance < 15)){
 						printf OUTPUT "%4d %3s %4d %3s %6.3f\n",$resid1,$resname1,$resid2,$resname2,$distance;
 					}
 
@@ -41,6 +41,9 @@ sub calculate_Distance_Filters {
 		}
 	}
 	close OUTPUT;
+	system("cat Results/Calculate_Distance_Filters-${output}.tmp | sort -k1n,1n -k3n,3n > Results/Calculate_Distance_Filters-${output}.txt");
+	system("rm -f Results/Calculate_Distance_Filters-${output}.tmp");
+	return "Results/Calculate_Distance_Filters-${output}.txt"
 }
 
 1;

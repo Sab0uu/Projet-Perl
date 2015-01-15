@@ -11,7 +11,7 @@ sub Count_Classify_Aa {
 	$output =~ s/\..*$//;
 	$output = lc($output);
 
-	open OUTPUT, "> Results/Count-Classify-Aa-${output}.txt";
+	open OUTPUT, "> Results/Count-Classify-Aa-${output}.tmp";
 
 	open FILE, $open;
 	while (<FILE>){
@@ -39,12 +39,14 @@ sub Count_Classify_Aa {
 	foreach my $k (sort {$a cmp $b} keys %counter){
 		my($min,$max,$aa1,$aa2)=split('_',$k);
 		my $count = $counter{$k};
-		my @aalist;
 
 		printf OUTPUT "%4.1f %4.1f %3s %3s %3d\n",$min,$max,$aa1,$aa2,$count;
 		
 	}
 	close OUTPUT;
+	system("cat Results/Count-Classify-Aa-${output}.tmp | sort -k3,3 -k4,4 -k1n,1n -k2n,2n > Results/Count-Classify-Aa-${output}.txt");
+	system("rm -f Results/Count-Classify-Aa-${output}.tmp");
+	return %counter;
 }
 
 1;
